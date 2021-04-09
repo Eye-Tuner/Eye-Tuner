@@ -1,0 +1,6 @@
+cmake==3.18.4.post1
+dlib==19.22.0
+numpy==1.20.2
+opencv-python==4.5.1.48
+pygame==2.0.1
+python-pygaze==0.7.1
