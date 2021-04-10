@@ -15,7 +15,7 @@ maybe settings below seems to be retrieved from pygaze.defaults: the default set
 """
 
     # MAIN
-    DUMMYMODE = True  # False for gaze contingent display, True for dummy mode (using mouse or joystick)
+    DUMMYMODE = False  # False for gaze contingent display, True for dummy mode (using mouse or joystick)
     LOGFILENAME = 'default'  # logfilename, without path
     LOGFILE = LOGFILENAME[:]  #
     # .txt; adding path before logfilename is optional;
@@ -61,7 +61,7 @@ maybe settings below seems to be retrieved from pygaze.defaults: the default set
 
     # EYETRACKER
     # general
-    TRACKERTYPE = 'smi'  #
+    TRACKERTYPE = 'tobii'  #
     # either 'smi', 'eyelink' or 'dummy' (NB: if DUMMYMODE is True, trackertype will be set to dummy automatically)
     SACCVELTHRESH = 35  # degrees per second, saccade velocity threshold
     SACCACCTHRESH = 9500  # degrees per second, saccade acceleration threshold
