@@ -32,3 +32,6 @@ def patch_pygaze_libtime():
 
     # Patch with new class
     pygametime.PyGameTime = new_class
+
+
+patch_pygaze_libtime()
