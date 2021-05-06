@@ -72,10 +72,10 @@ with open(data_file, "a") as file:
             l_top_point = (round((landmarks.part(43).x + landmarks.part(44).x) / 2),round((landmarks.part(43).y + landmarks.part(44).y) / 2))
             l_bot_point = (round((landmarks.part(47).x + landmarks.part(46).x) / 2),round((landmarks.part(47).y + landmarks.part(46).y) / 2))
 
-            r_hor_line = cv2.line(frame, r_left_point, r_right_point, (0,255,0), 2)
-            r_vert_line = cv2.line(frame, r_top_point,r_bot_point,(0,255,0),2)
-            l_hor_line = cv2.line(frame, l_left_point, l_right_point, (0, 255, 0), 2)
-            l_vert_line = cv2.line(frame, l_top_point, l_bot_point, (0, 255, 0), 2)
+            #r_hor_line = cv2.line(frame, r_left_point, r_right_point, (0,255,0), 2)
+            #r_vert_line = cv2.line(frame, r_top_point,r_bot_point,(0,255,0),2)
+            #l_hor_line = cv2.line(frame, l_left_point, l_right_point, (0, 255, 0), 2)
+            #l_vert_line = cv2.line(frame, l_top_point, l_bot_point, (0, 255, 0), 2)
 
             r_vert_length = hypot((r_top_point[0] - r_bot_point[0]),(r_top_point[1] - r_bot_point[1]))
             l_vert_length = hypot((l_top_point[0] - l_bot_point[0]),(l_top_point[1] - l_bot_point[1]))
@@ -111,12 +111,20 @@ with open(data_file, "a") as file:
                                         (landmarks.part(39).x, landmarks.part(39).y),
                                         (landmarks.part(40).x, landmarks.part(40).y),
                                         (landmarks.part(41).x, landmarks.part(41).y)], np.int32)
+            right_eye_region = np.array([(landmarks.part(42).x, landmarks.part(42).y),
+                                        (landmarks.part(43).x, landmarks.part(43).y),
+                                        (landmarks.part(44).x, landmarks.part(44).y),
+                                        (landmarks.part(45).x, landmarks.part(45).y),
+                                        (landmarks.part(46).x, landmarks.part(46).y),
+                                        (landmarks.part(47).x, landmarks.part(47).y)], np.int32)
 
             height, width, _ = frame.shape
             mask = np.zeros((height, width), np.uint8)
-            cv2.polylines(mask, [left_eye_region], True, 255, 2)
+            cv2.polylines(mask, [left_eye_region], True, 0, 1)
+            cv2.polylines(mask, [right_eye_region], True, 0, 1)
             cv2.fillPoly(mask, [left_eye_region], 255)
-            left_eyeball = cv2.bitwise_and(gray, gray, mask = mask)
+            cv2.fillPoly(mask, [right_eye_region],255)
+            eyeball = cv2.bitwise_and(gray, gray, mask = mask)
 
             l_min_x = np.min(left_eye_region[:, 0])
             l_min_y = np.min(left_eye_region[:, 1])
@@ -124,12 +132,24 @@ with open(data_file, "a") as file:
             l_max_y = np.max(left_eye_region[:, 1])
             left_eye = frame[l_min_y:l_max_y, l_min_x: l_max_x]
             gray_left = cv2.cvtColor(left_eye, cv2.COLOR_BGR2GRAY)
+            r_min_x = np.min(right_eye_region[:, 0])
+            r_min_y = np.min(right_eye_region[:, 1])
+            r_max_x = np.max(right_eye_region[:, 0])
+            r_max_y = np.max(right_eye_region[:, 1])
+            right_eye = frame[r_min_y:r_max_y, r_min_x: r_max_x]
+            gray_right = cv2.cvtColor(right_eye, cv2.COLOR_BGR2GRAY)
+            ########################################################
             _, threshold_left = cv2.threshold(gray_left, 70,255,cv2.THRESH_BINARY)
             threshold_left = cv2.resize(threshold_left, None, fx = 5, fy = 5)
             left_eye = cv2.resize(left_eye, None, fx = 5, fy = 5)
-            cv2.imshow("LeftEye",left_eye)
-            cv2.imshow("Thres", threshold_left)
-            cv2.imshow("LeftEyeGray", left_eyeball)
+            _, threshold_right = cv2.threshold(gray_right, 70, 255, cv2.THRESH_BINARY)
+            threshold_right = cv2.resize(threshold_right, None, fx=5, fy=5)
+            right_eye = cv2.resize(right_eye, None, fx=5, fy=5)
+            ##########################################################
+            #cv2.imshow("LeftEye",left_eye)
+            cv2.imshow("Thres_left", threshold_left)
+            cv2.imshow("Thres_right", threshold_right)
+            cv2.imshow("EyeGray", eyeball)
 
 
             file.write(str(timer()) + "," + str(r_coord) + "," + str(l_coord) + "," + str(tot_blink)+ "\n")
