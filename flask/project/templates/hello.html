@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+  {% if userid==None %}
+  <h1> eyetracker 에 방문하신 것을 감사드립니다 </h1>
+  <a href="/register"> 회원가입 </a> <br />
+  <a href="/login"> 로그인 </a>
+  {% endif %}
+  {% if userid %}
+  안녕하세요. {{userid}}님  <a href="/logout">로그아웃</a>
+
+  <h1>Typewriter</h1>
+
+  <button onclick="typeWriter()">Click me</button>
+
+  <p id="demo"></p>
+
+  <script>
+    var i = 0;
+    var txt = 'Lorem ipsum dummy text blabla.';
+    var speed = 50;
+
+    function typeWriter() {
+      if (i < txt.length) {
+        document.getElementById("demo").innerHTML += txt.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+  </script>
+
+  </body>
+  {% endif %}
+</html>
