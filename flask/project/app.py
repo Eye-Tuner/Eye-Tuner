@@ -1,70 +1,69 @@
 import os
-from flask import Flask
-from flask import request
-from flask import session
+from flask import Flask,render_template
 
-from flask import redirect
-from flask import render_template
-from models import db
+from flask_sqlalchemy import SQLAlchemy
+# from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
-from forms import RegisterForm, LoginForm
 
-from models import Fcuser
 
-app = Flask(__name__)
+db = SQLAlchemy()
+# migrate = Migrate()
+csrf = CSRFProtect()
 
-@app.route('/logout', methods=['GET'])
-def logout():
-    session.pop('userid', None)
-    return redirect('/')
-    
 
-@app.route('/login', methods=['GET','POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        session['userid']=form.data.get('userid')
+def create_app():
 
-        return redirect('/')
-    
-    return render_template('login.html', form=form)
+    # Initialize
+    app = Flask(__name__)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit() :
-
-        fcuser = Fcuser()
-        fcuser.userid = form.data.get('userid')
-        fcuser.username = form.data.get('username')
-        fcuser.password = form.data.get('password')
-
-        db.session.add(fcuser)
-        db.session.commit()
-        print('success!')
-
-        return redirect('/')
-
-    return render_template('register.html', form=form)
-
-@app.route('/')
-def hello():
-    userid = session.get('userid', None)
-    return render_template('hello.html', userid=userid)
-
-if __name__ == "__main__":
-    
+    # Config
     basedir = os.path.abspath(os.path.dirname(__file__))
-    dbfile = os.path.join(basedir, 'db.sqlite')
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + dbfile
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY']='ajserwhfdhkaudfhwkjeehw'
+    app.config['SECRET_KEY'] = 'ajserwhfdhkaudfhwkjeehw'
 
-    csrf=CSRFProtect()
+    # CSRF
     csrf.init_app(app)
+
+    # ORM
     db.init_app(app)
     db.app = app
     db.create_all()
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    # if app.config['SQLALCHEMY_DATABASE_URI'].startswith("sqlite"):
+    #     migrate.init_app(app, db, render_as_batch=True)
+    # else:
+    #     migrate.init_app(app, db)
+    import models  # NOQA
+
+    # Blueprints
+    from views import register_all
+    register_all(app)
+
+    # Filters
+    import filters
+    app.jinja_env.filters.update({k: v for k, v in filters.__dict__.items() if not k.startswith('_')})
+
+    return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+
+    @app.route('/')
+    def hello():
+        return render_template('hello.html')
+
+    run_kwargs = dict(
+        host='127.0.0.1',
+        port=5000,
+        debug=True
+    )
+
+    # # for HTTPS
+    # import ssl
+    # ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+    # ssl_context.load_cert_chain(certfile='newcert.pem', keyfile='newkey.pem', password='secret')
+    # run_kwargs.update(ssl_context=ssl_context)
+
+    app.run(**run_kwargs)

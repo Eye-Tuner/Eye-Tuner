@@ -23,10 +23,12 @@ predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 def midpoint(p1 ,p2):
     return int((p1.x + p2.x)/2), int((p1.y + p2.y)/2)
 
+
 font = cv2.FONT_HERSHEY_TRIPLEX
 right_blink_num = 0
 left_blink_num = 0
 tot_blink = 0
+
 
 def get_blinking_ratio(eye_points, facial_landmarks):
     left_point = (facial_landmarks.part(eye_points[0]).x, facial_landmarks.part(eye_points[0]).y)
@@ -89,6 +91,7 @@ letter_index = 0
 blinking_frames = 0
 text = ""
 
+
 if not sys.version_info >= (3, 8):
     timer = time.clock
 if sys.platform == 'win32':
@@ -97,10 +100,12 @@ else:
     _timer_init = time.time()
     timer = lambda: time.time() - _timer_init  # noqa
 
+
 data_dir = os.path.join(os.getcwd(), DATA_DIR)
 if not os.path.exists(data_dir):
     os.mkdir(data_dir)
 data_file = os.path.join(data_dir, "data_log_{}.csv".format(time.strftime('%Y_%m_%d_%H_%M_%S')))
+
 
 with open(data_file, "a") as file:
     if os.stat(data_file).st_size == 0:
