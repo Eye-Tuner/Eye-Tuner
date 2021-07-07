@@ -194,12 +194,12 @@ function getVideoEventListener(
 
       // Draw cropped image on canvas2
       // https://stackoverflow.com/questions/26015497/how-to-resize-then-crop-an-image-with-canvas
-      ctx.drawImage( video,
+      ctx.drawImage( videoElement,
         leftEye[0].x +10,        // start X
         leftEye[0].y - 3,        // start Y
         disX, disY,                                           // area to crop
         0, 0,                                                 // Place the result at 0, 0 in the canvas,
-        canvas2.width, canvas2.height
+        canvas2Element.width, canvas2Element.height
       );
 
       let blink_ratio_r = getBlinkingRatio(rightEye);
@@ -225,7 +225,7 @@ function getVideoEventListener(
         text.style.backgroundColor = "white";
       }
 
-      let gaze_ratio_r = getGazeRatio(temp, rightEye, canvas3);
+      let gaze_ratio_r = getGazeRatio(temp, rightEye, canvas3Element);
       let gaze_ratio_l = getGazeRatio(temp, leftEye);
       let gaze_ratio = (gaze_ratio_r + gaze_ratio_l) / 2;
 
@@ -233,7 +233,7 @@ function getVideoEventListener(
         if (gaze_ratio <= 1) {
           text.innerHTML += "& RIGHT";
         } else if (gaze_ratio < 3) {
-          text.innerHTML += "& CENCER";
+          text.innerHTML += "& CENTER";
         } else {
           text.innerHTML += "& LEFT";
         }
@@ -275,6 +275,7 @@ function getGazeRatio(canvas, eyeCoordinates, threshShowDst=null) {
   } else {
     return white_left / white_right
   }
+
 }
 
 Setup();
