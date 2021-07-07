@@ -63,18 +63,18 @@ if(!DEBUG){
 
 // if(window.location.hostname=="127.0.0.1"){
 //   Promise.all([
-//     faceapi.nets.tinyFaceDetector.loadFromUri('/static/models'),
-//     faceapi.nets.faceLandmark68Net.loadFromUri('/static/models'),
-//     faceapi.nets.faceRecognitionNet.loadFromUri('/static/models'),
-//     faceapi.nets.faceExpressionNet.loadFromUri('/static/models')
+//     faceapi.nets.tinyFaceDetector.loadFromUri('/static/faceapi_models'),
+//     faceapi.nets.faceLandmark68Net.loadFromUri('/static/faceapi_models'),
+//     faceapi.nets.faceRecognitionNet.loadFromUri('/static/faceapi_models'),
+//     faceapi.nets.faceExpressionNet.loadFromUri('/static/faceapi_models')
 //   ]).then(startVideo)
 // } else {
-//   let subfolder = 'wink-scroll' // change this to the subfolder you've put models folder on your server
+//   let subfolder = 'wink-scroll' // change this to the subfolder you've put faceapi_models folder on your server
 //   Promise.all([
-//     faceapi.nets.tinyFaceDetector.loadFromUri('/static/models'),
-//     faceapi.nets.faceLandmark68Net.loadFromUri('/static/models'),
-//     faceapi.nets.faceRecognitionNet.loadFromUri('/static/models'),
-//     faceapi.nets.faceExpressionNet.loadFromUri('/static/models')
+//     faceapi.nets.tinyFaceDetector.loadFromUri('/static/faceapi_models'),
+//     faceapi.nets.faceLandmark68Net.loadFromUri('/static/faceapi_models'),
+//     faceapi.nets.faceRecognitionNet.loadFromUri('/static/faceapi_models'),
+//     faceapi.nets.faceExpressionNet.loadFromUri('/static/faceapi_models')
 //   ]).then(startVideo)
 // }
 

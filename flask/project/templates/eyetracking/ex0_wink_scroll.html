@@ -12,13 +12,13 @@
 
   <script defer src="{{ url_for('static', filename='lib/face-api.min.js') }}"></script>
   <script defer src="{{ url_for('static', filename='js/winkScroll.js') }}"></script>
-  <script defer type='text/javascript'>
+  <script defer type='text/javascript'> // todo: to function
       function loadModels() {
           Promise.all([
-            faceapi.nets.tinyFaceDetector.loadFromUri('{{ url_for('static', filename="models") }}'),
-            faceapi.nets.faceLandmark68Net.loadFromUri('{{ url_for('static', filename="models") }}'),
-            faceapi.nets.faceRecognitionNet.loadFromUri('{{ url_for('static', filename="models") }}'),
-            faceapi.nets.faceExpressionNet.loadFromUri('{{ url_for('static', filename="models") }}')
+            faceapi.nets.tinyFaceDetector.loadFromUri('{{ url_for('static', filename="faceapi_models") }}'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('{{ url_for('static', filename="faceapi_models") }}'),
+            faceapi.nets.faceRecognitionNet.loadFromUri('{{ url_for('static', filename="faceapi_models") }}'),
+            faceapi.nets.faceExpressionNet.loadFromUri('{{ url_for('static', filename="faceapi_models") }}')
           ]).then(startVideo)
       }
   </script>

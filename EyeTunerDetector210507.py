@@ -38,9 +38,11 @@ def get_gaze_ratio(eye_points, facial_landmarks):
 
     height, width, _ = frame.shape
     mask = np.zeros((height, width), np.uint8)
-    cv2.polylines(mask, [left_eye_region], True, 255, 2)
-    cv2.fillPoly(mask, [left_eye_region], 255)
+    cv2.polylines(mask, [left_eye_region], True, 255, 2)  # not in js
+    cv2.fillPoly(mask, [left_eye_region], 255)  # not in js
     eye = cv2.bitwise_and(gray, gray, mask=mask)
+    cv2.imshow('mask', mask)
+    cv2.imshow('eye', eye)
 
     min_x = np.min(left_eye_region[:, 0])
     min_y = np.min(left_eye_region[:, 1])
@@ -51,6 +53,7 @@ def get_gaze_ratio(eye_points, facial_landmarks):
 
     ########################################################
     _, threshold_eye = cv2.threshold(gray_eye, 70, 255, cv2.THRESH_BINARY)
+    cv2.imshow('threshold_eye', threshold_eye)
     height, width = threshold_eye.shape
     threshold_left = threshold_eye[0: height, 0: int(width / 2)]
     threshold_right = threshold_eye[0: height, int(width / 2):width]
@@ -132,9 +135,13 @@ with open(data_file, "a") as file:
             r_ratio = r_hor_length / r_vert_length
             l_ratio = l_hor_length / l_vert_length
 
-            r_coord = (round((landmarks.part(36).x + landmarks.part(39).x) / 2), round(
-                (round((landmarks.part(37).y + landmarks.part(38).y) / 2)) + (
-                    round((landmarks.part(40).y + landmarks.part(41).y) / 2))))
+            r_coord = (
+                round((landmarks.part(36).x + landmarks.part(39).x) / 2),
+                round(
+                    (round((landmarks.part(37).y + landmarks.part(38).y) / 2)) +
+                    (round((landmarks.part(40).y + landmarks.part(41).y) / 2))
+                )
+            )
             l_coord = (round((landmarks.part(42).x + landmarks.part(45).x) / 2), round(
                 (round((landmarks.part(43).y + landmarks.part(44).y) / 2)) + (
                     round((landmarks.part(46).y + landmarks.part(47).y) / 2))))

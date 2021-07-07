@@ -5,6 +5,7 @@
   {# 임시 링크 #}
   <p><a href='{{ url_for('eyetracking.wink_scroll_example') }}'>wink_scroll test</a></p>
   <p><a href='{{ url_for('eyetracking.webgazer_example') }}'>webgazer test</a></p>
+  <p><a href='{{ url_for('eyetracking.blink_counter') }}'>BLINK COUNTER</a></p>
   {#  #}
 
   {# views.auth 의 load_logged_in_user 함수 덕분에 #}
@@ -24,16 +25,33 @@
   <p id="demo"></p>
 
   <script>
-    var i = 0;
-    var txt = 'Lorem ipsum dummy text blabla.';
-    var speed = 50;
+    let txt = 'Lorem ipsum dummy text blabla.';
+    let speed = 50;
 
-    function typeWriter() {
-      if (i < txt.length) {
-        document.getElementById("demo").innerHTML += txt.charAt(i);
-        i++;
-        setTimeout(typeWriter, speed);
+    let ctx = []
+
+    function typeWriter(dst=document.getElementById("demo")) {
+      let i = 0;
+
+      ctx.forEach(e => clearTimeout(e))
+      ctx = [];
+      dst.innerHTML = ""
+
+      function inner() {
+
+        if (i < txt.length) {
+          dst.innerHTML += txt.charAt(i);
+          i++;
+          ctx.push(setTimeout(inner, speed));
+
+        } else {
+          ctx.forEach(e => clearTimeout(e))
+          ctx = []
+
+        }
       }
+
+      inner();
     }
   </script>
 

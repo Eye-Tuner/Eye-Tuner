@@ -126,6 +126,7 @@ with open(data_file, "a") as file:
             # end #
 
             landmarks = predictor(gray, face)
+
             # original #
             # print(landmarks.part(36))
             # x = landmarks.part(36).x

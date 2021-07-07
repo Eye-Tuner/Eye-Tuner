@@ -12,3 +12,8 @@ def wink_scroll_example():
 @bp.route('/ex1/')
 def webgazer_example():
     return render_template('eyetracking/ex1_empty_page.html')
+
+
+@bp.route('/blink_counter/')
+def blink_counter():
+    return render_template('eyetracking/blink_counter.html')
