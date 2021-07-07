@@ -41,8 +41,6 @@ def get_gaze_ratio(eye_points, facial_landmarks):
     cv2.polylines(mask, [left_eye_region], True, 255, 2)  # not in js
     cv2.fillPoly(mask, [left_eye_region], 255)  # not in js
     eye = cv2.bitwise_and(gray, gray, mask=mask)
-    cv2.imshow('mask', mask)
-    cv2.imshow('eye', eye)
 
     min_x = np.min(left_eye_region[:, 0])
     min_y = np.min(left_eye_region[:, 1])

@@ -4,13 +4,14 @@ let DEBUG = true
 let leftBlink, rightBlink;
 
 let video, canvas2, canvas3, text;
+let temp = document.createElement('canvas');
 
 // let cap = new cv.VideoCapture(video); // todo
 
 function Setup(callback=null) {
   /** Init debugging text field, video and canvases */
 
-  document.body.innerText = ""
+  document.body.innerText = "";
 
   video = document.createElement("VIDEO");
   video.style.position = "absolute";
@@ -148,18 +149,17 @@ function getVideoEventListener(
     let ctx2 = canvas3Element.getContext("2d");
     ctx2.fillStyle = "#FF0000";
 
-    setInterval(async () => {
+    setInterval(async () => {  // face-api requires async function
 
       // Detect faces with face-api
-      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions())
           .withFaceLandmarks()
           .withFaceExpressions();
 
       // Resize the detections to match the canvas size
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
-      let p = [canvas, canvas2Element, canvas3Element];
-      p.forEach(clearCanvas);
+      [canvas, canvas2Element, canvas3Element].forEach(clearCanvas);
 
       if(DEBUG) {
         faceapi.draw.drawDetections(canvas, resizedDetections);
@@ -182,8 +182,13 @@ function getVideoEventListener(
         document.getElementsByClassName("winkScroll")[i].style.backgroundColor = backgroundColor;
       }
 
-      // distance?
+      temp.width = videoElement.width;
+      temp.height = videoElement.height;
+      let tempCtx = temp.getContext('2d');
+      tempCtx.drawImage(videoElement, 0, 0)
 
+      // distance?
+      // cannot read
       let disX = distance(resizedLeftEye[0], resizedLeftEye[3]) /2;
       let disY = distance(resizedLeftEye[1], resizedLeftEye[4]) -5;
 
@@ -194,35 +199,24 @@ function getVideoEventListener(
         leftEye[0].y - 3,        // start Y
         disX, disY,                                           // area to crop
         0, 0,                                                 // Place the result at 0, 0 in the canvas,
-        canvas2.width, canvas2.height);
+        canvas2.width, canvas2.height
+      );
 
-      // Draw cropped image on canvas2
-      // https://stackoverflow.com/questions/26015497/how-to-resize-then-crop-an-image-with-canvas
-      ctx.drawImage( video,
-        leftEye[0].x +10,        // start X
-        leftEye[0].y - 3,        // start Y
-        disX, disY,                                           // area to crop
-        0, 0,                                                 // Place the result at 0, 0 in the canvas,
-        canvas2.width, canvas2.height);
-
-      let [r_hor_length, r_vert_length] = getEyeLengthByCoordinates(rightEye);
-      let [l_hor_length, l_vert_length] = getEyeLengthByCoordinates(leftEye);
-
-      let r_ratio = (r_hor_length / r_vert_length) || NaN;
-      let l_ratio = (l_hor_length / l_vert_length) || NaN;
+      let blink_ratio_r = getBlinkingRatio(rightEye);
+      let blink_ratio_l = getBlinkingRatio(leftEye);
 
       let blink_threshold = 3.45;  // todo: not precise as Dlib
-      if (DEBUG) console.log(r_ratio, l_ratio);  // todo
+      if (DEBUG) console.log('blink ratio:', blink_ratio_r, blink_ratio_l);  // todo
 
-      if(r_ratio >= blink_threshold && l_ratio >= blink_threshold) {
+      if(blink_ratio_r >= blink_threshold && blink_ratio_l >= blink_threshold) {
         text.innerHTML = "Both blinking";
         text.style.backgroundColor = "red";
         leftBlink++; rightBlink++;
-      } else if(r_ratio >= blink_threshold) {
+      } else if(blink_ratio_r >= blink_threshold) {
         text.innerHTML = "Right blinking";
         text.style.backgroundColor = "blue";
         rightBlink++;
-      } else if(l_ratio >= blink_threshold) {
+      } else if(blink_ratio_l >= blink_threshold) {
         text.innerHTML = "Left blinking";
         text.style.backgroundColor = "blue";
         leftBlink++;
@@ -231,9 +225,9 @@ function getVideoEventListener(
         text.style.backgroundColor = "white";
       }
 
-      let gaze_ratio_left = getGazeRatioByCoordinates(leftEye)
-      let gaze_ratio_right = getGazeRatioByCoordinates(rightEye)
-      let gaze_ratio = (gaze_ratio_right + gaze_ratio_left) / 2;
+      let gaze_ratio_r = getGazeRatio(temp, rightEye, canvas3);
+      let gaze_ratio_l = getGazeRatio(temp, leftEye);
+      let gaze_ratio = (gaze_ratio_r + gaze_ratio_l) / 2;
 
       if(gaze_ratio > 0) {
         if (gaze_ratio <= 1) {
@@ -250,27 +244,37 @@ function getVideoEventListener(
   }
 }
 
-function getEyeLengthByCoordinates(eyeCoordinates) {
-  let left_point, right_point, top_point, bot_point
-  left_point = [eyeCoordinates[0].x, eyeCoordinates[0].y]
-  right_point = [eyeCoordinates[3].x, eyeCoordinates[3].y]
-  top_point = [(eyeCoordinates[1].x + eyeCoordinates[2].x) / 2, (eyeCoordinates[1].y + eyeCoordinates[2].y) / 2]
-  bot_point = [(eyeCoordinates[4].x + eyeCoordinates[5].x) / 2, (eyeCoordinates[4].y + eyeCoordinates[5].y) / 2]
-  let vert_length, hor_length
-  hor_length = hypot((left_point[0] - right_point[0]), (left_point[1] - right_point[1]))
-  vert_length = hypot((top_point[0] - bot_point[0]), (top_point[1] - bot_point[1]))
-  return [hor_length, vert_length]
+function getBlinkingRatio(eyeCoordinates) {
+  let [hor_length, vert_length] = getEyeLengthByCoordinates(eyeCoordinates);
+  return (hor_length / vert_length) || NaN;
 }
 
-function getGazeRatioByCoordinates(eyeCoordinates) {
-// todo: NotImplemented
-  return 2
+function getGazeRatio(canvas, eyeCoordinates, threshShowDst=null) {
+
+  let eye = getGrayEyeFromCanvas(canvas, eyeCoordinates);
+
+  cv.threshold(eye, eye, 70, 255, cv.THRESH_BINARY);
+
+  let [height, width] = eye.matSize
+  let half_width = Math.round(width / 2)
+  let threshold_left = eye.roi(new cv.Rect(0, 0, half_width, height))
+  let threshold_right = eye.roi(new cv.Rect(half_width, 0, width - half_width, height))
+  let white_left = cv.countNonZero(threshold_left)
+  let white_right = cv.countNonZero(threshold_right)
+
+  // todo
+  if (DEBUG && !!threshShowDst) cv.imshow(threshShowDst, eye);
+  //
+
+  threshold_left.delete(); threshold_right.delete(); eye.delete();
+
+  if (white_left === 0) {
+    return 1
+  } else if (white_right === 0) {
+    return 5
+  } else {
+    return white_left / white_right
+  }
 }
 
-function hypot(...val) {
-  return Math.sqrt(val.reduce((previousValue, currentValue) => (previousValue + Math.pow(currentValue, 2)), 0));
-}
-
-function distance(p1, p2) {
-  return hypot(p2.x - p1.x, p2.y - p1.y);
-}
+Setup();
