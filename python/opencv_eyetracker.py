@@ -34,7 +34,7 @@ data_file = os.path.join(data_dir, "data_log_{}.csv".format(time.strftime('%Y_%m
 
 with open(data_file, "a") as file:
     if os.stat(data_file).st_size == 0:
-        file.write("TIME,X1,Y1,Z1,X2,Y2,Z2,X,Y,Z\n")  # todo: FILE CONTENTS
+        file.write("TIME,R,L\n")  # todo: FILE CONTENTS
 
     while True:
         _, frame = cap.read()

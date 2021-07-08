@@ -2,12 +2,12 @@
 # example script for using PyGaze
 import random
 import sys
+import types
 
 
-# 이 class 내용은 constants.py 라는 모듈 내용이었는데 제가 한 파일로 합쳤어요
-class _Constant:
-    __getattribute__ = object.__getattribute__
-    __doc__ = """instead of importing constants.py file, I made settings class and registered it into sys.modules.
+class constants(types.ModuleType):  # noqa
+    __doc__ = """
+instead of importing constants.py file, I made settings class and registered it into sys.modules.
 default way to set constants is making constants.py file in base directory,
 and importing that module in main function: >>> import constants
 
@@ -61,7 +61,7 @@ maybe settings below seems to be retrieved from pygaze.defaults: the default set
 
     # EYETRACKER
     # general
-    TRACKERTYPE = 'tobii'  #
+    TRACKERTYPE = 'dummy'  # todo: rename this to use eye-tracking library, e.g. 'tobii'
     # either 'smi', 'eyelink' or 'dummy' (NB: if DUMMYMODE is True, trackertype will be set to dummy automatically)
     SACCVELTHRESH = 35  # degrees per second, saccade velocity threshold
     SACCACCTHRESH = 9500  # degrees per second, saccade acceleration threshold
@@ -90,13 +90,12 @@ maybe settings below seems to be retrieved from pygaze.defaults: the default set
     CURSORPENWIDTH = 3  # cursor edge width in pixels (only if cursor is not filled)
 
 
-sys.modules['constants'] = _Constant  # NOQA
-del _Constant
+sys.modules['constants'] = constants  # noqa
 import constants  # noqa
 
 
 # 이거 먼저 해야 pygaze 오류 안 나요
-def patch_pygaze_libtime():
+def patch_pygaze():  # todo
     import sys
     import time
     from pygaze._time import pygametime  # NOQA
@@ -113,7 +112,7 @@ def patch_pygaze_libtime():
     return pygametime  # return patched module
 
 
-patch_pygaze_libtime()
+patch_pygaze()
 
 from pygaze import libscreen
 from pygaze import libtime
