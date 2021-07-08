@@ -18,8 +18,8 @@ class RegisterForm(FlaskForm):
             if Fcuser.query.filter_by(userid=userid).first():
                 raise ValueError(f'id "{userid}" already exists!')
 
-    userid = StringField('userid', validators=[DataRequired(), Length(min=-1, max=30), UserID()])
-    username = StringField('username', validators=[DataRequired()])
+    userid = StringField('userid', validators=[DataRequired(), Length(min=-1, max=32), UserID()])
+    username = StringField('username', validators=[DataRequired(), Length(max=8)])
     password = PasswordField('password', validators=[
         DataRequired(), EqualTo('repassword', '비밀번호가 일치하지 않습니다')])
     repassword = PasswordField('repassword', validators=[DataRequired()])
