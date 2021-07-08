@@ -6,9 +6,9 @@ let leftBlink, rightBlink;
 let video, canvas2, canvas3, text;
 let temp = document.createElement('canvas');
 
-// let cap = new cv.VideoCapture(video); // todo
+// let cap = new cv.VideoCapture(video); // todo: Not used
 
-function Setup(callback=null) {
+function Setup() {
   /** Init debugging text field, video and canvases */
 
   document.body.innerText = "";
@@ -54,37 +54,22 @@ function Setup(callback=null) {
   text.id = "txt";
   document.body.appendChild(text);
 
-  if (!!callback) callback();
-
 }
 
-function ensureLoadedFaceApi(uri, callback=null) {
-  if (!!callback) {
-    Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri(uri),
-      faceapi.nets.faceLandmark68Net.loadFromUri(uri),
-      faceapi.nets.faceRecognitionNet.loadFromUri(uri),
-      faceapi.nets.faceExpressionNet.loadFromUri(uri)
-    ]).then(callback)
-  } else {
-    faceapi.nets.tinyFaceDetector.loadFromUri(uri)
-    faceapi.nets.faceLandmark68Net.loadFromUri(uri)
-    faceapi.nets.faceRecognitionNet.loadFromUri(uri)
-    faceapi.nets.faceExpressionNet.loadFromUri(uri)
-  }
-}
+function startVideo(
+    videoElement=video,
+    textElement=text,
+) {
 
-function startVideo(videoElement=video) {
-
-  text.innerText = "Loading video... Please enable your video on browser"
+  textElement.innerText = "Loading video... Please enable your video on browser"
 
   let errorCallback = err => {
     console.error(err);
-    text.innerText = "";
+    textElement.innerText = "";
     let a = document.createElement("A");
     a.href = "javascript:location.reload()";
     a.innerText = "Please reload page, video loading failed.";
-    text.appendChild(a);
+    textElement.appendChild(a);
   };
 
   // userAgent: string type
@@ -97,7 +82,7 @@ function startVideo(videoElement=video) {
       videoElement.onloadedmetadata = function(__) {
         videoElement.play();
       };
-      text.innerText = "";
+      textElement.innerText = "";
     })
     .catch(errorCallback);
 
@@ -107,28 +92,20 @@ function startVideo(videoElement=video) {
       { video: {} },
       function (stream) {
         videoElement.srcObject = stream;
-        text.innerText = "";
+        textElement.innerText = "";
       },
       errorCallback
     )
 
   }
-  return video;
-}
-
-function clearCanvas(c) {
-  c.getContext("2d").clearRect(0, 0, c.width, c.height);
-}
-
-
-function detectFace(videoElement=video) {
-
+  return videoElement;
 }
 
 function getVideoEventListener(
     videoElement=video,
     canvas2Element=canvas2,
     canvas3Element=canvas3,
+    textElement=text,
 ) {
   return () => {
 
@@ -159,7 +136,8 @@ function getVideoEventListener(
       // Resize the detections to match the canvas size
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
-      [canvas, canvas2Element, canvas3Element].forEach(clearCanvas);
+      [canvas, canvas2Element, canvas3Element]
+          .forEach(c => c.getContext("2d").clearRect(0, 0, c.width, c.height));
 
       if(DEBUG) {
         faceapi.draw.drawDetections(canvas, resizedDetections);
@@ -168,18 +146,15 @@ function getVideoEventListener(
       }
 
       // Check if there's only 1 face on the feed and change the BG color of winkScroll class element
-      let backgroundColor;
       if(detections.length === 1){
         leftEye = detections[0].landmarks.getLeftEye();
         rightEye = detections[0].landmarks.getRightEye();
         resizedLeftEye = resizedDetections[0].landmarks.getLeftEye();
         resizedRightEye = resizedDetections[0].landmarks.getRightEye();
-        backgroundColor = "#e6faff";
+        document.body.style.backgroundColor = "#e6faff";
       } else {
-        backgroundColor = "white";
-      }
-      for(let i=0; i<document.getElementsByClassName("winkScroll").length||0; i++) {
-        document.getElementsByClassName("winkScroll")[i].style.backgroundColor = backgroundColor;
+        document.body.style.backgroundColor = "white";
+        return
       }
 
       temp.width = videoElement.width;
@@ -188,7 +163,6 @@ function getVideoEventListener(
       tempCtx.drawImage(videoElement, 0, 0)
 
       // distance?
-      // cannot read
       let disX = distance(resizedLeftEye[0], resizedLeftEye[3]) /2;
       let disY = distance(resizedLeftEye[1], resizedLeftEye[4]) -5;
 
@@ -205,37 +179,39 @@ function getVideoEventListener(
       let blink_ratio_r = getBlinkingRatio(rightEye);
       let blink_ratio_l = getBlinkingRatio(leftEye);
 
-      let blink_threshold = 3.45;  // todo: not precise as Dlib
+      let blink_threshold = 3.45;  // todo: not precise as DLib
       if (DEBUG) console.log('blink ratio:', blink_ratio_r, blink_ratio_l);  // todo
 
       if(blink_ratio_r >= blink_threshold && blink_ratio_l >= blink_threshold) {
-        text.innerHTML = "Both blinking";
-        text.style.backgroundColor = "red";
+        textElement.innerHTML = "Both blinking";
+        textElement.style.backgroundColor = "red";
         leftBlink++; rightBlink++;
       } else if(blink_ratio_r >= blink_threshold) {
-        text.innerHTML = "Right blinking";
-        text.style.backgroundColor = "blue";
+        textElement.innerHTML = "Right blinking";
+        textElement.style.backgroundColor = "blue";
         rightBlink++;
       } else if(blink_ratio_l >= blink_threshold) {
-        text.innerHTML = "Left blinking";
-        text.style.backgroundColor = "blue";
+        textElement.innerHTML = "Left blinking";
+        textElement.style.backgroundColor = "blue";
         leftBlink++;
       } else {
-        text.innerHTML = "No blinking";
-        text.style.backgroundColor = "white";
+        textElement.innerHTML = "No blinking";
+        textElement.style.backgroundColor = "white";
       }
 
       let gaze_ratio_r = getGazeRatio(temp, rightEye, canvas3Element);
       let gaze_ratio_l = getGazeRatio(temp, leftEye);
       let gaze_ratio = (gaze_ratio_r + gaze_ratio_l) / 2;
 
+      if (DEBUG) console.log('gaze ratio:', gaze_ratio);  // todo
+
       if(gaze_ratio > 0) {
         if (gaze_ratio <= 1) {
-          text.innerHTML += "& RIGHT";
+          textElement.innerHTML += "& RIGHT";
         } else if (gaze_ratio < 3) {
-          text.innerHTML += "& CENTER";
+          textElement.innerHTML += "& CENTER";
         } else {
-          text.innerHTML += "& LEFT";
+          textElement.innerHTML += "& LEFT";
         }
       }
 
@@ -251,29 +227,35 @@ function getBlinkingRatio(eyeCoordinates) {
 
 function getGazeRatio(canvas, eyeCoordinates, threshShowDst=null) {
 
-  let eye = getGrayEyeFromCanvas(canvas, eyeCoordinates);
+  let eye, threshold_left, threshold_right
 
-  cv.threshold(eye, eye, 70, 255, cv.THRESH_BINARY);
+  try {
 
-  let [height, width] = eye.matSize
-  let half_width = Math.round(width / 2)
-  let threshold_left = eye.roi(new cv.Rect(0, 0, half_width, height))
-  let threshold_right = eye.roi(new cv.Rect(half_width, 0, width - half_width, height))
-  let white_left = cv.countNonZero(threshold_left)
-  let white_right = cv.countNonZero(threshold_right)
+    eye = getGrayEyeFromCanvas(canvas, eyeCoordinates);
 
-  // todo
-  if (DEBUG && !!threshShowDst) cv.imshow(threshShowDst, eye);
-  //
+    cv.threshold(eye, eye, 70, 255, cv.THRESH_BINARY);
 
-  threshold_left.delete(); threshold_right.delete(); eye.delete();
+    if (DEBUG && !!threshShowDst) cv.imshow(threshShowDst, eye);  // todo
 
-  if (white_left === 0) {
-    return 1
-  } else if (white_right === 0) {
-    return 5
-  } else {
-    return white_left / white_right
+    let [height, width] = eye.matSize
+    let half_width = Math.round(width / 2)
+    threshold_left = eye.roi(new cv.Rect(0, 0, half_width, height))
+    threshold_right = eye.roi(new cv.Rect(half_width, 0, width - half_width, height))
+    let white_left = cv.countNonZero(threshold_left)
+    let white_right = cv.countNonZero(threshold_right)
+
+    if (white_left === 0) {
+      return 1
+    } else if (white_right === 0) {
+      return 5
+    } else {
+      return white_left / white_right
+    }
+
+  } finally {
+    if (eye) eye.delete();
+    if (threshold_left) threshold_left.delete();
+    if (threshold_right) threshold_right.delete();
   }
 
 }
