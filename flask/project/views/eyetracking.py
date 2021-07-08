@@ -1,5 +1,4 @@
-from flask import Blueprint, url_for, render_template, flash, request, session, g
-from werkzeug.utils import redirect
+from flask import Blueprint, render_template
 
 bp = Blueprint('eyetracking', __name__, url_prefix='/dev')
 

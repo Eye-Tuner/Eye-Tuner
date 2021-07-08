@@ -1,6 +1,6 @@
 import os
 import datetime
-from flask import Flask, render_template, session, g, url_for
+from flask import Flask, session
 
 from flask_sqlalchemy import SQLAlchemy
 # from flask_migrate import Migrate
@@ -8,7 +8,7 @@ from flask_wtf.csrf import CSRFProtect
 
 
 db = SQLAlchemy()
-# migrate = Migrate()
+# migrate = Migrate()  # todo: use migration
 csrf = CSRFProtect()
 
 
@@ -45,15 +45,16 @@ def create_app():
     import filters
     app.jinja_env.filters.update({k: v for k, v in filters.__dict__.items() if not k.startswith('_')})
 
+    # Session Handler
+    @app.before_request
+    def make_session_permanent():
+        session.permanent = True
+        app.permanent_session_lifetime = datetime.timedelta(minutes=10)
+
     return app
 
 
 if __name__ == "__main__":
-    app = create_app()
-
-    @app.route('/')
-    def hello():
-        return render_template('hello.html')
 
     run_kwargs = dict(
         host='127.0.0.1',
@@ -67,4 +68,4 @@ if __name__ == "__main__":
     # ssl_context.load_cert_chain(certfile='newcert.pem', keyfile='newkey.pem', password='secret')
     # run_kwargs.update(ssl_context=ssl_context)
 
-    app.run(**run_kwargs)
+    create_app().run(**run_kwargs)
