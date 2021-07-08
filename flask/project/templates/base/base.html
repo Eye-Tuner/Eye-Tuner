@@ -27,7 +27,7 @@
   <!-- Title -->
   <title>{% block title %}{% endblock %}</title>
 </head>
-{% block body %}
+{% block body %} {# body 통째로 override 해야 할 때 사용합니다. #}
 <body>
     {% block content %}
     {% endblock %}
