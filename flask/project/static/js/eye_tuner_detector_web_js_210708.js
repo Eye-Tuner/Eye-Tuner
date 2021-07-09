@@ -244,13 +244,15 @@ function getGazeRatio(canvas, eyeCoordinates, threshShowDst=null) {
     let white_left = cv.countNonZero(threshold_left)
     let white_right = cv.countNonZero(threshold_right)
 
+    let gaze_ratio;
     if (white_left === 0) {
-      return 1
+      gaze_ratio = 1
     } else if (white_right === 0) {
-      return 5
+      gaze_ratio = 5
     } else {
-      return white_left / white_right
+      gaze_ratio = white_left / white_right
     }
+    return gaze_ratio;
 
   } finally {
     if (eye) eye.delete();

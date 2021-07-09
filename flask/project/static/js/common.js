@@ -24,6 +24,16 @@ function ensureLoadedFaceApi(uri, callback=null) {
   }
 }
 
+function getEyeCenter(eyeCoordinates) {
+  return [
+    Math.round((eyeCoordinates[0].x + eyeCoordinates[3].x) / 2),
+    Math.round(
+      ((eyeCoordinates[1].y + eyeCoordinates[2].y) / 2) +
+      ((eyeCoordinates[4].y + eyeCoordinates[5].y) / 2)
+    )
+  ]
+}
+
 function getEyeLengthByCoordinates(eyeCoordinates) {
   let left_point, right_point, top_point, bot_point
   left_point = [eyeCoordinates[0].x, eyeCoordinates[0].y]
