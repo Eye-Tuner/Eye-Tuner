@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='lib/opencv.js') }}" type="text/javascript"></script>
+<script defer src="{{ url_for('static', filename='lib/face-api.min.js') }}"></script>
+<script defer src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script defer src="{{ url_for('static', filename='js/eye_tuner_detector_web_js_210708.js') }}"></script>
+{% endblock %}
+
+{% block title %}Eye Tuner Demo{% endblock %}
+
+{% block body %}
+<body
+  onload="ensureLoadedFaceApi('{{ url_for('static', filename='faceapi_models') }}', () => startVideo().addEventListener('play', getVideoEventListener()));"
+  style="margin: 0; padding: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'PT Sans', sans-serif;"
+>You must run this html on flask runtime.</body>
+{% endblock %}
