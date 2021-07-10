@@ -1,0 +1,15 @@
+label {
+    font-size:20px;
+    font-weight: 700;
+}
+
+#toTop {
+    z-index: 1000;
+    width: 100px;
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    cursor: pointer;
+    display: none;
+    filter: alpha(opacity=60);
+}

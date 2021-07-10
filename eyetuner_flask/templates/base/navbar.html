@@ -1,0 +1,69 @@
+{# base/navbar.html #}
+<header class="header clearfix">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"><!-- fixed-top -->
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="logo" width="60" height="50"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" id="navbarDropdownList" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">메뉴모음1</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownList">
+                        <a class="dropdown-item" href="javascript:alert('준비중')">아이템1</a>
+                        <a class="dropdown-item" href="javascript:alert('준비중')">아이템2</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="javascript:alert('준비중')">아이템3</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" id="navbarDropdownReport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">메뉴모음2</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownReport">
+                        <a class="dropdown-item" href="javascript:alert('준비중')">아이템1</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="javascript:alert('준비중')">아이템2</a>
+                        <a class="dropdown-item" href="javascript:alert('준비중')">아이템3</a>
+                        <a class="dropdown-item" href="javascript:alert('준비중')">아이템4</a>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="javascript:alert('준비중')" class="nav-link">있어보이는 메뉴1</a></li>
+                <li class="nav-item"><a href="javascript:alert('준비중')" class="nav-link">있어보이는 메뉴2</a></li>
+                <li class="nav-item"><a href="javascript:alert('준비중')" class="nav-link">있어보이는 메뉴3</a></li>
+                <li class="nav-item"><a href="javascript:" class="nav-link" target="_blank">새 탭 방지</a></li>
+                <li class="nav-item"><a href="" class="nav-link" target="_blank">자가복제 버튼</a></li>
+
+            </ul>
+            <form class="form-inline my-2 my-lg-0" action="">
+                <input type="search" name="q" placeholder="있어보이는 입력창" class="form-control mr-sm-2" aria-label="Search" required id="id_q" value="">
+            </form>
+            <ul class="navbar-nav justify-content-end"> <!-- ml-5 mr-5 -->
+                <li>　</li>
+                {% if g.user %}
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" id="navbarDropAccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <strong>{{g.user.username}} 님</strong> 환영합니다.</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropAccount">
+                        <a class="dropdown-item" href="javascript:alert('준비중')">회원 정보 수정</a> <!-- &raquo; -->
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('auth.logout') }}">로그아웃</a>
+                    </div>
+                </li>　
+                {% endif %}
+                <li class="nav-item">
+                    {% if g.user %}<a class="btn btn-outline-success my-2 my-sm-0" href="{{ url_for('auth.logout') }}">로그아웃</a>
+                    {% else %}
+                    <a href="javascript:alert('소셜 로그인 기능은 준비중입니다.')">
+                    <img src="" alt="social login image" width="38" height="38">
+                    </a>　
+                    <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url_for('auth.login') }}">로그인</a>
+                    {% endif %}　
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

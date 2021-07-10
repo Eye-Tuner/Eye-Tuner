@@ -1,0 +1,69 @@
+{# base/base.html #}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- Google Font CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+  <!-- Extra CSS -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  {% block style %}{% endblock %}
+  <!-- jQuery JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  </script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
+  <!-- Extra JS -->
+  {% block script %}{% endblock %}
+  <!--script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script-->
+  <!-- Title -->
+  <title>{% block title %}{% endblock %}</title>
+</head>
+{% block body %} {# body 통째로 override 해야 할 때 사용합니다. #}
+<body>
+    <!-- Navigation Bar -->
+    {% include 'base/navbar.html' %}
+    <!-- Main Container -->
+    <div class='container'>
+        <!-- Content -->
+        {% block content %}{% endblock %}
+    </div>
+    <br>
+    <!-- Footer -->
+    <footer class="footer bg-light text-center">
+        <div class="container-fluid p-3">
+            <br>
+            <p><strong>Eye-Tuner</strong>&nbsp;연세대학교, 03722 서울특별시 서대문구 연세로 50&nbsp;Tel. 1599-1885<br>
+            &copy; 2021 Eye-Tuner Team. All rights reserved.</p>
+        </div>
+    </footer>
+    <aside>
+        <a id="toTop" class="btn btn-info backtop" href="javascript:goTop();">맨위로</a>
+    </aside>
+    <script>
+        let toTop = document.getElementById('toTop')
+        window.onscroll = function () {
+            if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
+                toTop.style.display='block';
+            } else {
+                toTop.style.display='none';
+            }
+        }
+        function goTop(){
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
+</body>
+{% endblock %}
+</html>
