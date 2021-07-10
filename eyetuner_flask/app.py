@@ -2,6 +2,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 
+# Directory Patch
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+del sys, os
+# Directory Patch End
+
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
@@ -38,6 +45,7 @@ def create_app():
 
     # Filters
     import eyetuner_flask.filters as f
+    # _ = {app.template_filter(v) for k, v in f.__dict__.items() if k in f.__all__}
     app.jinja_env.filters.update({k: v for k, v in f.__dict__.items() if k in f.__all__})
 
     # Context Processors
