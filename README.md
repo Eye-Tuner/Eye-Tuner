@@ -8,7 +8,7 @@ DB 오류 수정, Navigation Bar 추가 version:
 그리고 .gitignore 아래 포함하고 있는지 확인해주세요!
 
 
-*.pyc
+*.pyc \
 *~
 /venv*
 */.idea
