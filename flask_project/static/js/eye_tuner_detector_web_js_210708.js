@@ -134,7 +134,6 @@ function startVideo(
 }
 
 function shutdown() {
-  alert('your blinking too much!');
   window.location.href = 'https://youtu.be/du17m1rk-48';
 }
 
@@ -144,7 +143,7 @@ function getVideoEventListener(
     canvas3Element=canvas3,
     textElement=text,
 ) {
-  return () => {
+  let listener = () => {
 
     if (counter === undefined) {
       counter = new TimeCounter();
@@ -169,15 +168,22 @@ function getVideoEventListener(
 
     setInterval(async () => {  // face-api requires async function
 
-      if (counter.getSecElapsed() > 20) {
-        blinkingAverage.push(counter.getBlinkingPerSec());
-        counter.reset();
-      }
-
       // Detect faces with face-api
       const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions())
           .withFaceLandmarks()
           .withFaceExpressions();
+
+      if (counter.getSecElapsed() > 20) {
+        let blinking = counter.getBlinkingPerSec();
+        if (blinking >= 6/20) {
+          counter.reset();
+          setInterval(shutdown, 1000);
+          videoElement.removeEventListener('play', listener);
+        } else {
+          blinkingAverage.push(blinking);
+          counter.reset();
+        }
+      }
 
       console.log(counter.getSecElapsed(), counter.getBlinking());
 
@@ -272,6 +278,7 @@ function getVideoEventListener(
     }, /* todo: time interval */ 150)  // todo: 100 ~ 150
 
   }
+  return listener
 }
 
 function getBlinkingRatio(eyeCoordinates) {
