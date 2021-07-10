@@ -1,8 +1,0 @@
-{# field error #}
-{% for field, errors in form.errors.items() %}
-<div class="alert alert-danger" role="alert">
-    <strong>{{ form[field].label }}</strong>: {{ ', '.join(errors) }}
-</div>
-{% endfor %}
-{# flash error #}
-{% include 'base/flash_errors.html' %}

@@ -92,23 +92,20 @@ def get_timer():
 
 
 @contextlib.contextmanager
-def csv_writer(
+def writer(
         filename,
-        head=None,
+        header=None,
         *,
         directory=None,
 ):
     if directory is not None:
         directory = os.path.abspath(directory)
         if not os.path.isdir(directory):
-            if os.path.isfile(directory):
-                raise OSError('File with same name as directory already exists!')
-            else:
-                os.makedirs(directory)
+            os.makedirs(directory)
         filename = os.path.join(directory, filename)
     with open(filename, "a") as file:
-        if os.stat(filename).st_size == 0 and head is not None:
-            file.write(head)
+        if os.stat(filename).st_size == 0 and header is not None:
+            file.write(header)
             file.flush()
         yield file
 
@@ -123,8 +120,8 @@ if __name__ == '__main__':
     predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")  # noqa
 
     # Init CSV
-    with csv_writer(
-        head="TIME,r_coordinate,l_coordinate,right_blink,left_blink,total_blink,gaze_ratio\n",
+    with writer(
+        header="TIME,r_coordinate,l_coordinate,right_blink,left_blink,total_blink,gaze_ratio\n",
         filename="data_log_%s.csv" % time.strftime('%Y_%m_%d_%H_%M_%S'),
         directory=os.path.splitext(os.path.split(__file__)[1])[0] + '_data',
     ) as csv:
