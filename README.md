@@ -4,12 +4,12 @@ DB 오류 수정, Navigation Bar 추가 version:
 
 1. 'db.sqlite' 삭제
 2. 'FLASK_FIRST_SHORTCUT.py' 실행
+
 그리고 .gitignore 아래 포함하고 있는지 확인해주세요!
 
 
 *.pyc \
 *~ \
-/venv* \
 */.idea \
 .DS_Store \
 */__pycache__/ \
