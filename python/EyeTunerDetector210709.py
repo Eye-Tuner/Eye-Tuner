@@ -113,7 +113,11 @@ def writer(
 if __name__ == '__main__':
 
     # Init video capture
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    try:
+        cv2.cuda.getDevice()
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    except cv2.error:
+        cap = cv2.VideoCapture(0)
 
     # Init detectors
     detector = dlib.get_frontal_face_detector()  # noqa
