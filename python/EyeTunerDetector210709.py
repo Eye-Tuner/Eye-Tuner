@@ -199,7 +199,7 @@ if __name__ == '__main__':
             cv2.imshow("NewFrame", new_frame)
 
             key = cv2.waitKey(1)
-            if key == 27:  # ESC
+            if key in (3, 27):  # KeyboardInterrupt, ESC
                 break
 
         cap.release()
