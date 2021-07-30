@@ -1,0 +1,14 @@
+1. 자바스크립트 불러들이고 wg_eyetuner 라는 namespace 로 접근이 가능합니다.
+(지금은 시간상 webgazer 구조에서 완전히 변경하지는 못하지만,
+시간을 내서 원래 webgazer 구조와는 완전히 독립적으로
+tensorflow.js facemesh 모델을 사용하는 새로운 자바스크립트를 짤 예정입니다.)
+
+2. wg_eyetuner.callbackFunction = function(prediction, elapsed_time) {}; 과 같이 지정하는 방식으로
+실시간으로 시선 예측 좌표가 업데이트 될 때마다 호출될 callback function 을 지정할 수 있습니다.
+prediction: prediction.x, prediction.y와 같은 방식으로 예측 좌표 접근 가능
+elapsed_time: 총 시간 경과
+
+3. wg_eyetuner.params.canvas_id = "plotting_canvas" 와 같이 지정하는 방식으로
+실시간으로 점이 찍힐 캔버스의 아이디를 지정할 수 있습니다.
+
+0.todo: index.mjs ln 302, 318 다시 확인
