@@ -26,7 +26,7 @@
   안녕하세요. {{g.user.userid}}님&nbsp;&nbsp;<a class="btn-sm btn-dark" href="{{ url_for('auth.logout') }}">로그아웃</a>
   <br /> <br />
   <h1>Typewriter</h1>
-     <input id="input-q1" type="number" /> <button onclick="q1()">click</button>
+     <button onclick="q1()">1</button><button onclick="q2()">2</button><button onclick="q3()">3</button><button onclick="q4()">4</button><button onclick="q5()">5</button>
   <br />
   <button class="btn btn-outline-primary" onclick="typeWriter()">Click me</button>
   <br /> <br />
@@ -53,20 +53,21 @@
 {% block script %}
 
   <script>
-    let txt = 'Eye Tuner는 당신의 올바른 독해 습관을 응원합니다.';
+    let txt = 'Eye Tuner는 당신의 올바른 독해 습관을 응원합니다.\nalalalalall';
     function q1(){
-        let speed_var = $('#input-q1').val();
-        if (speed_var == 1){
-            speed = 30;
-        }else if(speed_var == 2){
-            speed = 40;
-        }else if(speed_var == 3){
-            speed = 50;
-        }else if(speed_var == 4){
-            speed = 60;
-        }else if(speed_var == 5){
-            speed = 70;
-        }
+        speed = 70
+    }
+    function q2(){
+        speed = 60
+    }
+    function q3(){
+        speed = 50
+    }
+    function q4(){
+        speed = 40
+    }
+    function q5(){
+        speed = 30
     }
 
     let speed = 50;
