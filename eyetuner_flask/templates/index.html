@@ -5,6 +5,7 @@
 
 {% block content %}
 
+
 <div class="container my-3">
 
   {# views.auth 의 load_logged_in_user 함수 덕분에 #}
@@ -12,13 +13,26 @@
 
 
   {% if not g.user %}
+      <div class="jb-wrap">
+          <p class="jm-font">EYE TUNER</p>
+          <p class='jm-font2'>eyetracker 에 방문하신 것을 감사드립니다</p>
+          <div class="jb-image"><img class='opac'
+                                     src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTksVIw3gQjs6t0_H1r7MESOUGc009n5CZJtQ&usqp=CAU'
+                                     style='width: 100%; height: auto !important; '></div>
 
+{#          <div class="jb-text">#}
+{#              <div class="jb-text-table">#}
+{#                  <div class="jb-text-table-row">#}
+{#                      <div class="jb-text-table-cell">#}
+{#                          <h1> eyetracker 에 방문하신 것을 감사드립니다 </h1>#}
+{#                      </div>#}
+{#                  </div>#}
+{#              </div>#}
+{#          </div>#}
+      </div>
+      <br />
   <br />
-  <h1> eyetracker 에 방문하신 것을 감사드립니다 </h1>
-  <br />
-  <a class="btn-sm btn-info" href="{{ url_for('auth.register') }}"> 회원가입 </a>
-  <br /> <br />
-  <a class="btn-sm btn-primary" href="{{ url_for('auth.login') }}"> 로그인 </a>
+
 
   {% else %}
 
@@ -34,6 +48,8 @@
   {% endif %}
 
   {# 임시 링크 #}
+  
+
   <div class="container text-right">
 
     <p><a class="btn btn-outline-dark" href="{{ url_for('eyetracking.wink_scroll_example') }}">wink_scroll test</a></p>
