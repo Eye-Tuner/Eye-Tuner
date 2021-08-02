@@ -12,6 +12,7 @@ except ImportError:
     sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
     del sys, os
     # Directory Patch End
+    import atexit
 
 db = SQLAlchemy()
 migrate = Migrate()

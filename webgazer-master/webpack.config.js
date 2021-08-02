@@ -12,11 +12,11 @@ function createConfig(options) {
   return {
     entry: './src/index.mjs',
     output: {
-      filename: 'webgazer' + 
-		(options.target == 'var' ? '' : '.' + options.target) + 
-		(options.minified ? '.min' : '') + 
+      filename: 'wg_eyetuner' +
+		(options.target === 'var' ? '' : '.' + options.target) +
+		(options.minified ? '.min' : '') +
 		'.js',
-      library: 'webgazer',
+      library: 'wg_eyetuner',
       libraryTarget: options.target,
       libraryExport: 'default',
       path: path.resolve(__dirname, 'dist'),
