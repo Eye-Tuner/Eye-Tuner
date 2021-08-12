@@ -1,9 +1,12 @@
---------------{# index.html #}
+{# index.html #}
 {% extends 'base/base.html' %}
 
 {% block title %}Index{% endblock %}
 
 {% block content %}
+
+<canvas id="plotting_canvas" width="500" height="500" style="cursor: crosshair;"></canvas>
+
 
 <div class="container my-3">
 
@@ -12,13 +15,26 @@
 
 
   {% if not g.user %}
+      <div class="jb-wrap">
+          <p class="jm-font">EYE TUNER</p>
+          <p class='jm-font2'>eyetracker 에 방문하신 것을 감사드립니다</p>
+          <div class="jb-image"><img class='opac'
+                                     src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTksVIw3gQjs6t0_H1r7MESOUGc009n5CZJtQ&usqp=CAU'
+                                     style='width: 100%; height: auto !important; '></div>
 
+{#          <div class="jb-text">#}
+{#              <div class="jb-text-table">#}
+{#                  <div class="jb-text-table-row">#}
+{#                      <div class="jb-text-table-cell">#}
+{#                          <h1> eyetracker 에 방문하신 것을 감사드립니다 </h1>#}
+{#                      </div>#}
+{#                  </div>#}
+{#              </div>#}
+{#          </div>#}
+      </div>
+      <br />
   <br />
-  <h1> eyetracker 에 방문하신 것을 감사드립니다 </h1>
-  <br />
-  <a class="btn-sm btn-info" href="{{ url_for('auth.register') }}"> 회원가입 </a>
-  <br /> <br />
-  <a class="btn-sm btn-primary" href="{{ url_for('auth.login') }}"> 로그인 </a>
+
 
   {% else %}
 
@@ -26,7 +42,7 @@
   안녕하세요. {{g.user.userid}}님&nbsp;&nbsp;<a class="btn-sm btn-dark" href="{{ url_for('auth.logout') }}">로그아웃</a>
   <br /> <br />
   <h1>Typewriter</h1>
-     <button onclick="q1()">1</button><button onclick="q2()">2</button><button onclick="q3()">3</button><button onclick="q4()">4</button><button onclick="q5()">5</button>
+      <button onclick="q1()">1</button><button onclick="q2()">2</button><button onclick="q3()">3</button><button onclick="q4()">4</button><button onclick="q5()">5</button>
   <br />
   <button class="btn btn-outline-primary" onclick="typeWriter()">Click me</button>
   <br /> <br />
@@ -35,11 +51,14 @@
   {% endif %}
 
   {# 임시 링크 #}
+
+
   <div class="container text-right">
 
     <p><a class="btn btn-outline-dark" href="{{ url_for('eyetracking.wink_scroll_example') }}">wink_scroll test</a></p>
     <p><a class="btn btn-outline-secondary" href="{{ url_for('eyetracking.webgazer_example') }}">webgazer test</a></p>
     <p><a class="btn btn-outline-success" href="{{ url_for('eyetracking.eye_tuner_detector_web') }}">EYE TUNER DETECTOR WEB (version 210708)</a></p>
+    <p><a class="btn btn-outline-secondary" href="{{ url_for('eyetracking.webgazer_example') }}">webgazer test</a></p>
   </div>
   {#  #}
 
@@ -50,10 +69,20 @@
 
 {% endblock %}
 
+
+
+{% block style %}
+<link rel="stylesheet" href="https://webgazer.cs.brown.edu/node_modules/bootstrap/dist/css/bootstrap.min.css">
+{% endblock %}
+
 {% block script %}
 
+<script src="https://webgazer.cs.brown.edu/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="https://webgazer.cs.brown.edu/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/static/lib/wg_eyetuner.min.js"></script>
+
   <script>
-    let txt = 'Eye Tuner는 당신의 올바른 독해 습관을 응원합니다.\nalalalalall';
+    let txt = 'Eye Tuner는 당신의 올바른 독해 습관을 응원합니다.';
     function q1(){
         speed = 70
     }
@@ -97,5 +126,44 @@
       inner();
     }
   </script>
+
+<script type="text/javascript">
+
+window.onload = async function() {
+
+    wg_eyetuner.params.showVideoPreview = true;
+    //start the webgazer tracker
+    await wg_eyetuner.setRegression('ridge') /* currently must set regression and tracker */
+        //.setTracker('clmtrackr')
+        .setListener(function(data, clock) {
+          //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
+          //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
+        })
+        .saveDataAcrossSessions(true)
+        .begin();
+        wg_eyetuner.showVideoPreview(true) /* shows all video previews */
+            .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
+            .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
+
+    //Set up the webgazer video feedback.
+    let setup = function() {
+
+        //Set up the main canvas. The main canvas is used to calibrate the webgazer.
+        let canvas = document.getElementById("plotting_canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.style.position = 'fixed';
+    };
+    setup();
+
+};
+
+// Set to true if you want to save the data even if you reload the page.
+window.saveDataAcrossSessions = true;
+
+window.onbeforeunload = function() {
+    wg_eyetuner.end();
+}
+</script>
 
 {% endblock %}
