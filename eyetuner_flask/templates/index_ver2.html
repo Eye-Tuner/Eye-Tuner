@@ -5,10 +5,9 @@
 
 {% block content %}
 
-<canvas id="plotting_canvas" width="500" height="500" style="cursor: crosshair;"></canvas>
 
 
-<div class="container my-3">
+<div class="container my-3" style="z-index: 2;">
 
   {# views.auth 의 load_logged_in_user 함수 덕분에 #}
   {# 따로 user 넘겨주지 않아도 공용 변수 request, g 중 g 를 통해 user 에 접근 가능합니다. #}
@@ -132,6 +131,7 @@
 window.onload = async function() {
 
     wg_eyetuner.params.showVideoPreview = true;
+    wg_eyetuner.params.showGazeDot = false;
     //start the webgazer tracker
     await wg_eyetuner.setRegression('ridge') /* currently must set regression and tracker */
         //.setTracker('clmtrackr')
@@ -145,16 +145,8 @@ window.onload = async function() {
             .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
             .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
 
-    //Set up the webgazer video feedback.
-    let setup = function() {
-
-        //Set up the main canvas. The main canvas is used to calibrate the webgazer.
-        let canvas = document.getElementById("plotting_canvas");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        canvas.style.position = 'fixed';
-    };
-    setup();
+    // 요놈 때문에 클릭이 안됐었던것으로 추정... 이건 내가 NodeJS 빌드로 이코드 없어도 되게 수정할 예정  // dhakim
+    document.getElementByID("webgazerGazeDot").style.zIndex = 1;
 
 };
 
