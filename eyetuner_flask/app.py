@@ -60,6 +60,7 @@ def create_app():
     # Session Handler
     def make_session_permanent():
         session.permanent = True
+
         app.permanent_session_lifetime = datetime.timedelta(minutes=10)
     from flask import session
     import datetime
