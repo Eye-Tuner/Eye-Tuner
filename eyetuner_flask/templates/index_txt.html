@@ -41,6 +41,12 @@
             <a class="btn-sm btn-dark" href="{{ url_for('auth.logout') }}">로그아웃</a>
             <br/> <br/>
             <h1>Typewriter</h1>
+            <h2>Select Text</h2>
+            <button onclick="mySend1()">T1</button>
+            <button onclick="mySend2()">T2</button>
+            <button onclick="mySend3()">T3</button>
+            <button onclick="mySend4()">T4</button>
+            <h3>Text Speed</h3>
             <button onclick="q1()">1</button>
             <button onclick="q2()">2</button>
             <button onclick="q3()">3</button>
@@ -99,8 +105,6 @@
     <script src="/static/lib/wg_eyetuner.min.js"></script>
 
     <script>
-        let txt = 'Eye Tuner는 당신의 올바른 독해 습관을 응원합니다.';
-
         function q1() {
             speed = 70
         }
@@ -122,8 +126,16 @@
         }
 
         let speed = 50;
-        let ctx = []
+    </script>
 
+    <script>
+        let txt;
+        function mySend1(){
+            txt = loadStrings('/static/words/1.txt');
+            console.log(txt)
+        }
+
+        let ctx = []
         function typeWriter(dst = document.getElementById("demo")) {
             let i = 0;
 
@@ -132,21 +144,18 @@
             dst.innerHTML = ""
 
             function inner() {
-
                 if (i < txt.length) {
                     dst.innerHTML += txt.charAt(i);
                     i++;
                     ctx.push(setTimeout(inner, speed));
-
                 } else {
                     ctx.forEach(e => clearTimeout(e))
                     ctx = []
-
                 }
             }
-
             inner();
         }
+
     </script>
 
     <script type="text/javascript">
