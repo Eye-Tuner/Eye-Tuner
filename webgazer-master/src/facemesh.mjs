@@ -17,7 +17,7 @@ TFFaceMesh.prototype.positionsArray = null;
 
 /**
  * Isolates the two patches that correspond to the user's eyes
- * @param  {Canvas} imageCanvas - canvas corresponding to the webcam stream
+ * @param  {HTMLCanvasElement} imageCanvas - canvas corresponding to the webcam stream
  * @param  {Number} width - of imageCanvas
  * @param  {Number} height - of imageCanvas
  * @return {Object} the two eye-patches, first left, then right eye
@@ -35,7 +35,7 @@ TFFaceMesh.prototype.getEyePatches = async function(imageCanvas, width, height) 
   // array of detected faces from the MediaPipe graph.
   const predictions = await model.estimateFaces(imageCanvas);
 
-  if (predictions.length == 0){
+  if (predictions.length === 0){
     return false;
   }
 

@@ -22,6 +22,9 @@ const params = {
   saveDataAcrossSessions: true,
   // Whether or not to store accuracy eigenValues, used by the calibration example file
   storingPoints: false,
+
+  canvas_id: "plotting_canvas",
+
 };
 
 export default params;

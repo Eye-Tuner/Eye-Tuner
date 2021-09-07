@@ -33,7 +33,7 @@ util.Eye = function(patch, imagex, imagey, width, height) {
 util.getEyeFeats = function(eyes) {
     var resizedLeft = this.resizeEye(eyes.left, resizeWidth, resizeHeight);
     var resizedRight = this.resizeEye(eyes.right, resizeWidth, resizeHeight);
-    
+
     var leftGray = this.grayscale(resizedLeft.data, resizedLeft.width, resizedLeft.height);
     var rightGray = this.grayscale(resizedRight.data, resizedRight.width, resizedRight.height);
 
@@ -240,16 +240,16 @@ util.resizeEye = function(eye, resizeWidth, resizeHeight) {
 
 /**
  * Checks if the prediction is within the boundaries of the viewport and constrains it
- * @param  {Array} prediction [x,y] - predicted gaze coordinates
- * @return {Array} constrained coordinates
+ * @param  {Object} prediction [x,y] - predicted gaze coordinates
+ * @return {Object} constrained coordinates
  */
 util.bound = function(prediction){
     if(prediction.x < 0)
         prediction.x = 0;
     if(prediction.y < 0)
         prediction.y = 0;
-    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     if(prediction.x > w){
         prediction.x = w;
     }

@@ -10,12 +10,12 @@
      * @return {Array.<Array.<Number>>} transposed matrix
      */
     self.webgazer.mat.transpose = function(matrix){
-        var m = matrix.length;
-        var n = matrix[0].length;
-        var transposedMatrix = new Array(n);
+        let m = matrix.length;
+        let n = matrix[0].length;
+        let transposedMatrix = new Array(n);
 
-        for (var i = 0; i < m; i++){
-            for (var j = 0; j < n; j++){
+        for (let i = 0; i < m; i++){
+            for (let j = 0; j < n; j++){
                 if (i === 0) transposedMatrix[j] = new Array(m);
                 transposedMatrix[j][i] = matrix[i][j];
             }
@@ -78,29 +78,31 @@
      */
     self.webgazer.mat.mult = function(matrix1, matrix2){
 
-        if (matrix2.length != matrix1[0].length){
+        if (matrix2.length !== matrix1[0].length){
             console.log('Matrix inner dimensions must agree:');
-            
+
         }
 
         var X = new Array(matrix1.length),
             Bcolj = new Array(matrix1[0].length);
 
-        for (var j = 0; j < matrix2[0].length; j++){
-            for (var k = 0; k < matrix1[0].length; k++){
-                Bcolj[k] = matrix2[k][j];
-            }
-            for (var i = 0; i < matrix1.length; i++){
-
-                if (j === 0)
-                    X[i] = new Array(matrix2[0].length);
-
-                var Arowi = matrix1[i];
-                var s = 0;
-                for (var k = 0; k < matrix1[0].length; k++){
-                    s += Arowi[k]*Bcolj[k];
+        {
+            for (let j = 0; j < matrix2[0].length; j++) {
+                for (let k = 0; k < matrix1[0].length; k++) {
+                    Bcolj[k] = matrix2[k][j];
                 }
-                X[i][j] = s;
+                for (let i = 0; i < matrix1.length; i++) {
+
+                    if (j === 0)
+                        X[i] = new Array(matrix2[0].length);
+
+                    var Arowi = matrix1[i];
+                    var s = 0;
+                    for (var k = 0; k < matrix1[0].length; k++) {
+                        s += Arowi[k] * Bcolj[k];
+                    }
+                    X[i][j] = s;
+                }
             }
         }
         return X;
@@ -302,5 +304,5 @@
         }
         return self.webgazer.mat.getSubMatrix(X,0,n-1,0,nx-1);
     }
-    
+
 }());

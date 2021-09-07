@@ -32,10 +32,9 @@
             {{ form.password(class="form-control", placeholder="비밀번호") }}
           </div>
          
-          <button type="submit" class="btn btn-primary">로그인</button>
-          <br /> <br />
-          <a class="btn btn-info" href="{{ url_for('auth.register') }}"> 회원가입 </a>
-          <br />
+
+          <button type="submit" class="btn btn-primary">로그인</button>&nbsp;
+          <a href="{{ url_for('auth.register') }}" class="btn btn-info">회원가입</a>
 
 
         </form>
