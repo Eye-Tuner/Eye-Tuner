@@ -69,7 +69,7 @@ def create_app():
     return app
 
 
-run_kwargs = dict(
+default_options = dict(
     host='127.0.0.1',
     port=5000,
     debug=True
@@ -83,4 +83,4 @@ run_kwargs = dict(
 
 
 if __name__ == "__main__":
-    create_app().run(**run_kwargs)
+    create_app().run(**default_options)
