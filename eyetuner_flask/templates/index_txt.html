@@ -146,18 +146,37 @@
 <script>
     let txt;
 
-    function mySend1(file) {
-        var rawFile = new XMLHttpRequest();
-        rawFile.open('GET', file, true);
-        rawFile.onreadystatechange = function() {
-            if (rawFile.readyState === 4) {
-                if (rawFile.status === 200 || rawFile.status == 0) {
-                    txt = rawFile.responseText;
-                    alert(txt);
-                }
-            }
-        };
-        rawFile.send(null);
+    function mySend1() {
+        $.ajax({
+            url: '/static/words/1.txt',
+            success: function(data) {
+                txt = data;
+            },
+        });
+    }
+    function mySend2() {
+        $.ajax({
+            url: '/static/words/2.txt',
+            success: function(data) {
+                txt = data;
+            },
+        });
+    }
+    function mySend3() {
+        $.ajax({
+            url: '/static/words/3.txt',
+            success: function(data) {
+                txt = data;
+            },
+        });
+    }
+    function mySend4() {
+        $.ajax({
+            url: '/static/words/4.txt',
+            success: function(data) {
+                txt = data;
+            },
+        });
     }
 
     let ctx = [];
