@@ -94,91 +94,97 @@
 
 {% block script %}
 
-    <script src="https://webgazer.cs.brown.edu/node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="https://webgazer.cs.brown.edu/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/static/lib/wg_eyetuner.min.js"></script>
+<script src="https://webgazer.cs.brown.edu/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="https://webgazer.cs.brown.edu/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/static/lib/wg_eyetuner.min.js"></script>
+<script src="/static/js/common.js"></script>
+<script defer src="/static/js/runtime.js"></script>
 
-    <script>
-        let txt = 'Eye Tuner는 당신의 올바른 독해 습관을 응원합니다.';
 
-        function q1() {
-            speed = 70
-        }
+<script>
+    let txt = 'Eye Tuner는 당신의 올바른 독해 습관을 응원합니다.';
 
-        function q2() {
-            speed = 60
-        }
+    function q1() {
+        speed = 70
+    }
 
-        function q3() {
-            speed = 50
-        }
+    function q2() {
+        speed = 60
+    }
 
-        function q4() {
-            speed = 40
-        }
+    function q3() {
+        speed = 50
+    }
 
-        function q5() {
-            speed = 30
-        }
+    function q4() {
+        speed = 40
+    }
 
-        let speed = 50;
-        let ctx = []
+    function q5() {
+        speed = 30
+    }
 
-        function typeWriter(dst = document.getElementById("demo")) {
-            let i = 0;
+    let speed = 50;
+    let ctx = []
 
-            ctx.forEach(e => clearTimeout(e))
-            ctx = [];
-            dst.innerHTML = ""
+    function typeWriter(dst = document.getElementById("demo")) {
+        let i = 0;
 
-            function inner() {
+        ctx.forEach(e => clearTimeout(e))
+        ctx = [];
+        dst.innerHTML = ""
 
-                if (i < txt.length) {
-                    dst.innerHTML += txt.charAt(i);
-                    i++;
-                    ctx.push(setTimeout(inner, speed));
+        function inner() {
 
-                } else {
-                    ctx.forEach(e => clearTimeout(e))
-                    ctx = []
+            if (i < txt.length) {
+                dst.innerHTML += txt.charAt(i);
+                i++;
+                ctx.push(setTimeout(inner, speed));
 
-                }
+            } else {
+                ctx.forEach(e => clearTimeout(e))
+                ctx = []
+
             }
-
-            inner();
         }
-    </script>
 
-    <script type="text/javascript">
+        inner();
+    }
+</script>
 
-        window.onload = async function () {
+<script defer type="text/javascript">
 
-            wg_eyetuner.params.showVideoPreview = true;
-            wg_eyetuner.params.showGazeDot = false;
-            //start the webgazer tracker
-            await wg_eyetuner.setRegression('ridge') /* currently must set regression and tracker */
-                //.setTracker('clmtrackr')
-                .setListener(function (data, clock) {
-                    //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
-                    //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
-                })
-                .saveDataAcrossSessions(true)
-                .begin();
-            wg_eyetuner.showVideoPreview(true) /* shows all video previews */
-                .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
-                .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
+    window.onload = async function () {
 
-            // 요놈 때문에 클릭이 안됐었던것으로 추정... 이건 내가 NodeJS 빌드로 이코드 없어도 되게 수정할 예정  // dhakim
-            document.getElementByID("webgazerGazeDot").style.zIndex = 1;
+        wg_eyetuner.params.showVideoPreview = true;
+        wg_eyetuner.params.showGazeDot = false;
+        //start the webgazer tracker
+        await wg_eyetuner.setRegression('ridge') /* currently must set regression and tracker */
+            //.setTracker('clmtrackr')
+            .setListener(
+                EYE_TUNER_RUNTIME.listener
+                // function (data, clock) {
+                //     //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
+                //     //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
+                // }
+            )
+            .saveDataAcrossSessions(true)
+            .begin();
+        wg_eyetuner.showVideoPreview(true) /* shows all video previews */
+            .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
+            .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
 
-        };
+        // 요놈 때문에 클릭이 안됐었던것으로 추정... 이건 내가 NodeJS 빌드로 이코드 없어도 되게 수정할 예정  // dhakim
+        document.getElementById("webgazerGazeDot").style.zIndex = 1;
 
-        // Set to true if you want to save the data even if you reload the page.
-        window.saveDataAcrossSessions = true;
+    };
 
-        window.onbeforeunload = function () {
-            wg_eyetuner.end();
-        }
-    </script>
+    // Set to true if you want to save the data even if you reload the page.
+    window.saveDataAcrossSessions = true;
+
+    window.onbeforeunload = function () {
+        wg_eyetuner.end();
+    }
+</script>
 
 {% endblock %}
