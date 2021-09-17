@@ -8,10 +8,6 @@
 
 <div class='container my-3' style='z-index: 2;'>
 
-    {# views.auth 의 load_logged_in_user 함수 덕분에 #}
-    {# 따로 user 넘겨주지 않아도 공용 변수 request, g 중 g 를 통해 user 에 접근 가능합니다. #}
-
-
     {% if not g.user %}
     <div class='jb-wrap'>
         <p class='jm-font'>EYE TUNER</p>
@@ -64,19 +60,14 @@
     <button onclick='q3()'>3</button>
     <button onclick='q4()'>4</button>
     <button onclick='q5()'>5</button>
-    <div class='btn-group'>
-        <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown'
-                aria-expanded='false'>
-            text contrast <span class='caret'></span>
-        </button>
-        <ul class='dropdown-menu' role='menu'>
-            <li><a href='#'>Action</a></li>
-            <li><a href='#'>Another action</a></li>
-            <li><a href='#'>Something else here</a></li>
-            <li class='divider'></li>
-            <li><a href='#'>Separated link</a></li>
-        </ul>
-    </div>
+    <br>
+    <label>채도 조절:</label>
+    <input type='range' min=0 max=100 onchange='range_change(this)'>
+    <br>
+    <label>명도 조절:</label>
+    <input type='range' min=0 max=100 onchange='range_change2(this)'>
+    <br>
+    
     <br />
     <button class='btn btn-outline-primary' onclick='typeWriter()'>Click me</button>
     <br /> <br />
@@ -115,9 +106,12 @@
 
 {% block script %}
 
-<script src='https://webgazer.cs.brown.edu/node_modules/jquery/dist/jquery.min.js'></script>
-<script src='https://webgazer.cs.brown.edu/node_modules/bootstrap/dist/js/bootstrap.min.js'></script>
-<script src='/static/lib/wg_eyetuner.min.js'></script>
+<script src="https://webgazer.cs.brown.edu/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="https://webgazer.cs.brown.edu/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/static/lib/wg_eyetuner.min.js"></script>
+<script src="/static/js/common.js"></script>
+<script defer src="/static/js/runtime.js"></script>
+
 
 <script>
     function q1() {
@@ -178,6 +172,17 @@
             },
         });
     }
+    
+    // 명도 채도 조절
+    let saturation, lightness;
+
+    function range_change(obj) {
+        saturation=obj.value;
+    }
+
+    function range_change2(obj) {
+        lightness=obj.value;
+    }
 
     let ctx = [];
 
@@ -187,6 +192,7 @@
         ctx.forEach(e => clearTimeout(e));
         ctx = [];
         dst.innerHTML = '';
+        dst.style.color = 'hsl(0,'+ saturation + '%,' + lightness + '%)';
 
         function inner() {
             if (i < txt.length) {
