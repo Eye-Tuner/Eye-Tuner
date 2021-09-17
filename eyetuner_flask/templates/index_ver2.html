@@ -106,6 +106,8 @@
 <script src="https://webgazer.cs.brown.edu/node_modules/jquery/dist/jquery.min.js"></script>
 <script src="https://webgazer.cs.brown.edu/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/static/lib/wg_eyetuner.min.js"></script>
+<script src="/static/js/common.js"></script>
+<script defer src="/static/js/runtime.js"></script>
 
 <script>
     let saturation, lightness;
@@ -166,7 +168,7 @@
     }
 </script>
 
-<script type="text/javascript">
+<script defer type="text/javascript">
 
     window.onload = async function () {
 
@@ -175,10 +177,13 @@
         //start the webgazer tracker
         await wg_eyetuner.setRegression('ridge') /* currently must set regression and tracker */
             //.setTracker('clmtrackr')
-            .setListener(function (data, clock) {
-                //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
-                //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
-            })
+            .setListener(
+                EYE_TUNER_RUNTIME.listener
+                // function (data, clock) {
+                //     //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
+                //     //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
+                // }
+            )
             .saveDataAcrossSessions(true)
             .begin();
         wg_eyetuner.showVideoPreview(true) /* shows all video previews */
@@ -186,7 +191,7 @@
             .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
 
         // 요놈 때문에 클릭이 안됐었던것으로 추정... 이건 내가 NodeJS 빌드로 이코드 없어도 되게 수정할 예정  // dhakim
-        document.getElementByID("webgazerGazeDot").style.zIndex = 1;
+        document.getElementById("webgazerGazeDot").style.zIndex = 1;
 
     };
 
