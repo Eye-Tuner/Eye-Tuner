@@ -114,6 +114,12 @@
 
 
 <script>
+
+    function _set_speed(sp) {
+        speed = sp;
+        console.log(sp);
+    }
+
     function q1() {
         speed = 70;
     }
@@ -218,10 +224,7 @@
         //start the webgazer tracker
         await wg_eyetuner.setRegression('ridge') /* currently must set regression and tracker */
             //.setTracker('clmtrackr')
-            .setListener(function(data, clock) {
-                //   console.log(data); /* data is an object containing an x and y key which are the x and y prediction coordinates (no bounds limiting) */
-                //   console.log(clock); /* elapsed time in milliseconds since webgazer.begin() was called */
-            })
+            .setListener(EYE_TUNER_RUNTIME.make_listener(_set_speed))
             .saveDataAcrossSessions(true)
             .begin();
         wg_eyetuner.showVideoPreview(true) /* shows all video previews */
