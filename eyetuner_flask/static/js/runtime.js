@@ -72,13 +72,13 @@ EYE_TUNER_RUNTIME.make_listener = function(set_speed_callback) {
 
     let sliced = EYE_TUNER_RUNTIME.speed_queue.slice(80, 100);
     let cur_speed = sliced.reduce((sum, value) => (sum + value), 0) / sliced.length;
-    if (cur_speed >= 800) {
+    if (cur_speed >= 1800) {
       set_speed_callback(10);
-    } else if (cur_speed >= 600) {
+    } else if (cur_speed >= 1400) {
       set_speed_callback(40);
-    } else if (cur_speed >= 400) {
+    } else if (cur_speed >= 1200) {
       set_speed_callback(60);
-    } else if (cur_speed >= 200) {
+    } else if (cur_speed >= 1000) {
       set_speed_callback(80);
     } else {
       set_speed_callback(100);
