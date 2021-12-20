@@ -49,7 +49,7 @@
     <a class='btn-sm btn-dark' href="{{ url_for('auth.logout') }}">로그아웃</a>
     <br /> <br />
     <div style="text-align: center">
-        <p style="font-size:450%; font-weight : bold ">TYPE WRITER</font>
+        <p style="font-size:450%; font-weight : bold ">TYPE WRITER</p>
     </div>
 
     <br/>
@@ -85,7 +85,7 @@
     <br /> <br />
     <div id="textbox" style="position: relative;">
 
-    <p id='textbox-text' style="position: absolute;"></p>
+    <p id='textbox-text'></p>
     <p id='textbox-background' style="opacity: 0.1; color: black;"></p>
     </div>
 {#    <p id='demo'></p>#}
@@ -213,16 +213,17 @@
             main = document.getElementById('textbox-text'),
             background = document.getElementById('textbox-background')
     ) {
-        let i = 0, dst = main;
+        let i = 0;
 
         ctx.forEach(e => clearTimeout(e));
         ctx = [];
-        dst.innerHTML = '';
+        main.innerHTML = '';
+        main.style.position = 'absolute';
 
         function inner() {
-            dst.style.color = 'hsl(0,'+ saturation + '%,' + lightness + '%)';
+            main.style.color = `hsl(0,${saturation}%,${lightness}%)`;
             if (i < txt.length) {
-                dst.innerHTML = txt.slice(0, i + 1);
+                main.innerHTML = txt.slice(0, i + 1);
                 i++;
                 ctx.push(setTimeout(inner, speed));
             } else {
