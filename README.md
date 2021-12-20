@@ -77,7 +77,7 @@
 * `FLASK_FIRST_SHORTCUT.py` : script for initializing database
 * `FLASK_RUN_SHORTCUT.py` : script for serving eye tuner web
 * `FLASK_SHELL_SHORTCUT.py` : script for managing web via flask interactive shell
-* `reauirements.txt` : list of python libraries required in eye tuner web or python implements
+* `requirements.txt` : list of python libraries required in eye tuner web or python implements
 
 ---
 
