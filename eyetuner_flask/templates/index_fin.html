@@ -49,7 +49,7 @@
     <a class='btn-sm btn-dark' href="{{ url_for('auth.logout') }}">로그아웃</a>
     <br /> <br />
     <div style="text-align: center">
-        <p style="font-size:450%; font-weight : bold ">TYPE WRITER</font>
+        <p style="font-size:450%; font-weight : bold ">TYPE WRITER</p>
     </div>
 
     <br/>
@@ -83,7 +83,12 @@
     <button class='btn btn-outline-primary' onclick='typeWriter()'>Click me</button>
     </div>
     <br /> <br />
-    <p id='demo'></p>
+    <div id="textbox" style="position: relative;">
+
+    <p id='textbox-text'></p>
+    <p id='textbox-background' style="opacity: 0.1; color: black;"></p>
+    </div>
+{#    <p id='demo'></p>#}
 
     {% endif %}
 
@@ -203,18 +208,22 @@
 
     let ctx = [];
 
-    function typeWriter(dst = document.getElementById('demo')) {
+    function typeWriter(
+            enable_background = true,
+            main = document.getElementById('textbox-text'),
+            background = document.getElementById('textbox-background')
+    ) {
         let i = 0;
 
         ctx.forEach(e => clearTimeout(e));
         ctx = [];
-        dst.innerHTML = '';
-
+        main.innerHTML = '';
+        main.style.position = 'absolute';
 
         function inner() {
-            dst.style.color = 'hsl(0,'+ saturation + '%,' + lightness + '%)';
+            main.style.color = `hsl(0,${saturation}%,${lightness}%)`;
             if (i < txt.length) {
-                dst.innerHTML += txt.charAt(i);
+                main.innerHTML = txt.slice(0, i + 1);
                 i++;
                 ctx.push(setTimeout(inner, speed));
             } else {
@@ -223,7 +232,10 @@
             }
         }
 
+        if (enable_background) background.innerHTML = txt;
+
         inner();
+
     }
 </script>
 
@@ -243,7 +255,6 @@
             .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
             .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
 
-        // 요놈 때문에 클릭이 안됐었던것으로 추정... 이건 내가 NodeJS 빌드로 이코드 없어도 되게 수정할 예정  // dhakim
         document.getElementByID('webgazerGazeDot').style.zIndex = 1;
 
     };
