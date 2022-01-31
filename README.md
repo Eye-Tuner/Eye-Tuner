@@ -4,7 +4,7 @@
 > * 연세대학교 기계공학과 19학번 **[장민준](https://github.com/wkdalswns0427/)**
 > * 연세대학교 글로벌융합공학부 20학번 **[변정윤](https://github.com/bluesaurus01/)**
 > * 연세대학교 의예과 20학번 **[김동하](https://github.com/kdha0727/)**
-> * 연세대학교 행정학과 20학번 **[최귀주](#)**
+> * 연세대학교 행정학과 20학번 **[최귀주](https://github.com/dangnaguiruns/)**
 
 ---
 
